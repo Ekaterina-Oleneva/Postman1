@@ -1,0 +1,779 @@
+{
+	"info": {
+		"_postman_id": "e50c0e55-e5cb-4c1a-a566-1d64874487ee",
+		"name": "10-22-Automation-CA-Marketing Original",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "24859866"
+	},
+	"item": [
+		{
+			"name": "Creating new postal address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// STATUS CHECK TESTS ",
+							"",
+							"pm.test(\"Response assertions\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"if(responseCode.code === 200) {",
+							"    tests[\"Backend is available, response code is 200\"] = true;",
+							"} else if (responseCode.code === 401) {",
+							"    tests[\"Not authorised, check access token or Log in\"] = false;",
+							"} else if (responseCode.code === 403) {",
+							"    tests[\"Forbiden\"] = false;",
+							"} else if (responseCode.code === 404) {",
+							"    tests[\"Not Found. Check if you made correct request\"] = false;",
+							"} else if (responseCode.code === 422) {",
+							"    tests[\"he instance is not valid\"] = false;",
+							"} else {",
+							"    tests[\"Something went wrong. Check response body\"] = false;",
+							"}    ",
+							"",
+							"// RESPONSE TIME CHECK",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"// RESPONSE SIZE CHECK",
+							"",
+							"pm.test(\"Response size is less than 1000 B\", function () {",
+							"    pm.expect(pm.response.responseSize).to.be.below(1000);",
+							"});",
+							"",
+							"// RESPONSE BODY CHECK",
+							"",
+							"pm.test(\"Body had 'id'\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"id\");",
+							"});",
+							"",
+							"pm.test('Response should be okay to process', function() {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.not.have.jsonBody(\"error\");",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"",
+							"// HEADER CHECK",
+							"",
+							"pm.test(\"Header is correct\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=utf-8\");",
+							"    pm.response.to.have.header(\"Connection\", \"keep-alive\");",
+							"    pm.response.to.have.header(\"Server\", \"Pepyaka/1.19.10\");",
+							"    pm.response.to.have.header(\"X-Content-Type-Options\", \"nosniff\");",
+							"});",
+							"",
+							"// SETTING ENV VAR ID",
+							"let jsonData = JSON.parse(responseBody);",
+							"pm.environment.set(\"ID\", jsonData.id);",
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.unset(\"ID\");",
+							"pm.environment.unset(\"COMPANY\");",
+							"pm.environment.set(\"COMPANY\", \"Apple-\" + new Date().getTime());"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "6NopUpDsAJQ4nxj9_cE0uVpvwOeSiuEUgOHhg4R8ddY.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTEzVDIwOjMyOjI2Ljg4NloiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xNFQwMDozMjoyNi44ODZaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"address\": {\n        \"fullName\": {\n            \"firstName\": \"Girl\",\n            \"lastName\": \"NOT SO Nice\"\n        },\n        \"company\": null,\n        \"taxInfo\": {\n            \"id\": null,\n            \"type\": null\n        },\n        \"addressLine1\": \"5675 Ruffin Road\",\n        \"addressLine2\": null,\n        \"street\": {\n            \"name\": null,\n            \"number\": null\n        },\n        \"city\": \"San Diego\",\n        \"country\": \"USA\",\n        \"subdivision\": \"CA\",\n        \"zipCode\": \"92123\",\n        \"phoneNumber\": null,\n        \"location\": {\n            \"latitude\": 32.8374398,\n            \"longitude\": -117.1261536\n        }\n    },\n    \"setAsDefault\": false\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Make default address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// STATUS CHECK TEST",
+							"",
+							"switch (responseCode.code) {",
+							"    case 200:",
+							"        tests[\"200 ok. The request has succeeded\"] = true;",
+							"        break;",
+							"    case 404:",
+							"        tests[\"404 Not found\"] = false;",
+							"        break;",
+							"    case 400:",
+							"        tests[\"400 Bad Request\"] = false;",
+							"        break;",
+							"    case 401:",
+							"        tests[\"401 BUnauthorized\"] = false;",
+							"        break;",
+							"    case 500:",
+							"        tests[\"500 Internal Server Error\"] = false;",
+							"        break;",
+							"    case 503:",
+							"        tests[\"503 Server unavailable\"] = false;",
+							"        break;",
+							"    case 502:",
+							"        tests[\"502 bad gateway\"] = false;",
+							"        break;",
+							"    case 599:",
+							"        tests[\"599 Network connect timeout error\"] = false;",
+							"        break;",
+							"    case 408:",
+							"        tests[\"408 Request is timeout\"] = false;",
+							"        break;",
+							"    default:",
+							"        tests[\"Sorry, we are out of\" + responseCode.code] = false;",
+							"}    ",
+							"",
+							"// RESPONSE TIME CHECK        ",
+							"",
+							"tests['Response time is less than 500ms'] = responseTime < 500;",
+							"",
+							"// RESPONSE SIZE CHECK",
+							"",
+							"pm.test(\"Response size is less than 1000 B\", function () {",
+							"    pm.expect(pm.response.responseSize).to.be.below(1000);",
+							"});",
+							"",
+							"// RESPONSE BODY CHECK",
+							"",
+							"pm.test(\"Body had 'id'\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"{}\");",
+							"});",
+							"",
+							"// HEADER CHECK",
+							"",
+							"pm.test(\"Header is correct\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=utf-8\");",
+							"    pm.response.to.have.header(\"Connection\", \"keep-alive\");",
+							"    pm.response.to.have.header(\"Server\", \"Pepyaka/1.19.10\");",
+							"    pm.response.to.have.header(\"X-Content-Type-Options\", \"nosniff\");",
+							"    pm.response.to.have.header(\"Content-Length\", \"2\");",
+							"});",
+							" ",
+							"",
+							"",
+							"",
+							"    "
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "6NopUpDsAJQ4nxj9_cE0uVpvwOeSiuEUgOHhg4R8ddY.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTEzVDIwOjMyOjI2Ljg4NloiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xNFQwMDozMjoyNi44ODZaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"id\": \"{{ID}}\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses/default",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses",
+						"default"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show all postal addresses",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// STATUS CHECK TEST",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// RESPONSE TIME CHECK        ",
+							"",
+							"tests['Response time is less than 900ms'] = responseTime < 900;",
+							"",
+							"// RESPONSE SIZE CHECK",
+							"",
+							"pm.test(\"Response size is less than 10 KB\", function () {",
+							"    pm.expect(pm.response.responseSize).to.be.below(10240);",
+							"});",
+							"",
+							"// RESPONSE BODY CHECK",
+							"",
+							"pm.test('Response should be okay to process', function() {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.not.have.jsonBody(\"error\");",
+							"    pm.response.to.be.withBody;",
+							"});",
+							"",
+							"pm.test(\"Body had 'id'\", function () {",
+							"    pm.expect(pm.response.text()).to.include(\"id\");",
+							"});",
+							"",
+							"// CHECKING NEW ADDRESS IS PRESENT",
+							"",
+							"pm.test(\"New Id is in response\", function() {",
+							"    pm.expect(pm.response.text()).to.include(pm.environment.get(\"ID\"));",
+							"});",
+							"",
+							"// CHECKING NEW COMPANY IS PRESENT",
+							"",
+							"//pm.test(\"New Company is in response\", function() {",
+							" //   pm.expect(pm.response.text()).to.include(pm.environment.get(\"COMPANY\"));",
+							"  //  });",
+							"",
+							"",
+							"// HEADER CHECK",
+							"",
+							"pm.test(\"Header is correct\", function () {",
+							"    pm.response.to.have.header(\"Content-Type\", \"application/json;charset=utf-8\");",
+							"    pm.response.to.have.header(\"Connection\", \"keep-alive\");",
+							"    pm.response.to.have.header(\"Server\", \"Pepyaka/1.19.10\");",
+							"    pm.response.to.have.header(\"X-Content-Type-Options\", \"nosniff\");",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "6NopUpDsAJQ4nxj9_cE0uVpvwOeSiuEUgOHhg4R8ddY.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTEzVDIwOjMyOjI2Ljg4NloiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xNFQwMDozMjoyNi44ODZaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show default postal address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// STATUS CHECK TESTS ",
+							"",
+							"pm.test(\"Response assertions\", function () {",
+							"    pm.response.to.have.status(200);",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.json;",
+							"});",
+							"",
+							"if(responseCode.code === 200) {",
+							"    tests[\"Backend is available, response code is 200\"] = true;",
+							"} else if (responseCode.code === 401) {",
+							"    tests[\"Not authorised, check access token or Log in\"] = false;",
+							"} else if (responseCode.code === 403) {",
+							"    tests[\"Forbiden\"] = false;",
+							"} else if (responseCode.code === 404) {",
+							"    tests[\"Not Found. Check if you made correct request\"] = false;",
+							"} else if (responseCode.code === 422) {",
+							"    tests[\"he instance is not valid\"] = false;",
+							"} else {",
+							"    tests[\"Something went wrong. Check response body\"] = false;",
+							"}    ",
+							"",
+							"// RESPONSE TIME CHECK",
+							"",
+							"pm.test(\"Response time is less than 500ms\", function () {",
+							"    pm.expect(pm.response.responseTime).to.be.below(500);",
+							"});",
+							"",
+							"// RESPONSE SIZE CHECK",
+							"",
+							"pm.test(\"Response size is less than 10 KB\", function () {",
+							"    pm.expect(pm.response.responseSize).to.be.below(10240);",
+							"});",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "6NopUpDsAJQ4nxj9_cE0uVpvwOeSiuEUgOHhg4R8ddY.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTEzVDIwOjMyOjI2Ljg4NloiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xNFQwMDozMjoyNi44ODZaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses\\get-default-address",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses",
+						"get-default-address"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show specific postal address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// STATUS CHECK TEST",
+							"",
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"// RESPONSE TIME CHECK        ",
+							"",
+							"tests['Response time is less than 500ms'] = responseTime < 500;",
+							"",
+							"// RESPONSE SIZE CHECK",
+							"",
+							"pm.test(\"Response size is less than 10 KB\", function () {",
+							"    pm.expect(pm.response.responseSize).to.be.below(10240);",
+							"});",
+							"",
+							"// ADDRESS NOT DEFAULT CHECK",
+							"",
+							"pm.test(\"Check its not a Default Address\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.isDefaultAddress).to.eql(false);",
+							"});",
+							"",
+							"// ZIP CODE CHECK",
+							"",
+							"pm.test(\"Check ZipCode\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.address.zipCode).to.eql(\"92123\");",
+							"});",
+							"",
+							"// FIRST NAME CHECK",
+							"",
+							"pm.test(\"Check ZipCode\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.address.fullName.firstName).to.eql(\"Girl\");",
+							"    });",
+							"",
+							"// RESPONSE BODY FORMAT CHECK",
+							"",
+							"pm.test(\"Entire Response is correct\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.address.id).to.be.a(\"string\");",
+							"     pm.expect(jsonData.address.fullName.firstName).to.be.a(\"string\");",
+							"     pm.expect(jsonData.address.fullName.lastName).to.be.a(\"string\");",
+							"     pm.expect(jsonData.address.country).to.be.a(\"string\");",
+							"     pm.expect(jsonData.address.city).to.be.a(\"string\");",
+							"     pm.expect(jsonData.address.subdivision).to.be.a(\"string\");",
+							"     pm.expect(jsonData.address.zipCode).to.be.a(\"string\");",
+							"});",
+							"",
+							"pm.test(\"ID is Correct\", function () {",
+							"    const jsonData = pm.response.json();",
+							"    pm.expect(jsonData.address.id).to.eql(pm.environment.get(\"ID\"));",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "6NopUpDsAJQ4nxj9_cE0uVpvwOeSiuEUgOHhg4R8ddY.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTEzVDIwOjMyOjI2Ljg4NloiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xNFQwMDozMjoyNi44ODZaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses/{{ID}}",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses",
+						"{{ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update existing postal address",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"pm.environment.set(\"COMPANY\", \"Google-\" + new Date().getTime())"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"address\": {\n        \"id\": \"{{ID}}\",\n        \"fullName\": {\n            \"firstName\": \"Girl\",\n            \"lastName\": \"Naughty\"\n        },\n        \"company\": \"{{COMPANY}}\",\n        \"taxInfo\": {\n            \"id\": null,\n            \"type\": null\n        },\n        \"addressLine1\": \"5675 Ruffin Road\",\n        \"addressLine2\": null,\n        \"street\": {\n            \"name\": null,\n            \"number\": null\n        },\n        \"city\": \"San Diego\",\n        \"country\": \"USA\",\n        \"subdivision\": \"CA\",\n        \"zipCode\": \"92123\",\n        \"phoneNumber\": null,\n        \"location\": {\n            \"latitude\": 32.8374398,\n            \"longitude\": -117.1261536\n        }\n    },\n    \"setAsDefault\": true,\n    \"fieldMask\": {\n        \"paths\": [\n            \"fullName.firstName\",\n            \"fullName.lastName\",\n            \"addressLine1\",\n            \"city\",\n            \"country\",\n            \"subdivision\",\n            \"zipCode\",\n            \"location.latitude\",\n            \"location.longitude\",\n            \"setAsDefault\"\n        ]\n    }\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses/{{ID}}",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses",
+						"{{ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show updated postal addresses",
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "6NopUpDsAJQ4nxj9_cE0uVpvwOeSiuEUgOHhg4R8ddY.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTEzVDIwOjMyOjI2Ljg4NloiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xNFQwMDozMjoyNi44ODZaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses/{{ID}}",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses",
+						"{{ID}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete existing postal address",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Order has been deleted, OK\", function () {",
+							"    pm.response.to.not.be.error;",
+							"    pm.response.to.be.withBody;",
+							"    pm.response.to.be.json;",
+							"    pm.response.to.be.ok;",
+							"    pm.response.to.be.an('object');",
+							"    pm.response.to.not.have.jsonBody(\"error\");",
+							"    pm.response.to.have.jsonBody({});",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "apikey",
+					"apikey": [
+						{
+							"key": "value",
+							"value": "c3zfSh_U4mjkFkti9x5JwzJ6bAHzMU3qhg07PTbpv40.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTI5VDIwOjMzOjU1Ljc0NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0zMFQwMDozMzo1NS43NDVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+							"type": "string"
+						},
+						{
+							"key": "key",
+							"value": "Authorization",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "6NopUpDsAJQ4nxj9_cE0uVpvwOeSiuEUgOHhg4R8ddY.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTEzVDIwOjMyOjI2Ljg4NloiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xNFQwMDozMjoyNi44ODZaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://addresses.wixapps.net/_api/addresses-web/v1/addresses/{{ID}}",
+					"protocol": "https",
+					"host": [
+						"addresses",
+						"wixapps",
+						"net"
+					],
+					"path": [
+						"_api",
+						"addresses-web",
+						"v1",
+						"addresses",
+						"{{ID}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "apikey",
+		"apikey": [
+			{
+				"key": "value",
+				"value": "iU6hlZzA8j5yExhhv-77jGZxbdsgWrwfk91dRplpU2s.eyJpbnN0YW5jZUlkIjoiZjQ2Y2Q1MDItZjcyZi00NGY3LTk2MzgtNWRhMWRlYjBiNGU3IiwiYXBwRGVmSWQiOiIxNTA1Yjc3NS1lODg1LWViMWItYjY2NS0xZTQ4NWQ5YmY5MGUiLCJtZXRhU2l0ZUlkIjoiMjhiNzkzZDYtNTQyNC00MDU4LTgwNDktMDI2YTRkYjAyODJmIiwic2lnbkRhdGUiOiIyMDIyLTEyLTE2VDIyOjEzOjA4LjM1NVoiLCJ1aWQiOiI3NTcxZGZmOS0yYTNmLTQwZTgtYTM1My02MzJiZTA4MGU0MmYiLCJkZW1vTW9kZSI6ZmFsc2UsImFpZCI6IjQxZjZmOGY5LWE3MWUtNGUzNy1hNDliLWM1OWM5NjdkNTRlZSIsImJpVG9rZW4iOiJkY2RiNDZkNC1hMzBiLTA0YWYtMTY3MS01ZmNiOTMwMDljYzgiLCJzaXRlT3duZXJJZCI6ImY5MTRmMTFjLWFhYjMtNDUyNy04ZDRlLWJhYjc2MjE0M2E2MCIsImV4cGlyYXRpb25EYXRlIjoiMjAyMi0xMi0xN1QwMjoxMzowOC4zNTVaIiwiaGFzVXNlclJvbGUiOmZhbHNlfQ",
+				"type": "string"
+			},
+			{
+				"key": "key",
+				"value": "Authorization",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
